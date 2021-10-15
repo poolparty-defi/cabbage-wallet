@@ -1,6 +1,6 @@
 import React from "react"
 import { Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
-import wallets from "../wallets/wallets"
+import wallets, { Wallet } from "../wallets/wallets"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const WalletSelection = (props: { connect: () => Promise<void> }) => {
+const WalletSelection = (props: { connect: (wallet: Wallet) => Promise<void> }) => {
     const classes = useStyles()
     return (
         <Paper className={classes.root} square>
@@ -23,7 +23,7 @@ const WalletSelection = (props: { connect: () => Promise<void> }) => {
                 {
                     wallets.map(wallet => (
                         <Grid item>
-                            <Button variant="text" onClick={props.connect}>
+                            <Button variant="text" onClick={async () => await props.connect(wallet)}>
                                 <Grid container direction="column" spacing={2}>
                                     <Grid item>
                                         <img className={classes.walletLogo} src={wallet.icon} alt={`${wallet.name}_icon`} />

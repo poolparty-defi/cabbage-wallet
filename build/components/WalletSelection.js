@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -22,7 +31,7 @@ const WalletSelection = (props) => {
     const classes = useStyles();
     return (react_1.default.createElement(core_1.Paper, { className: classes.root, square: true },
         react_1.default.createElement(core_1.Grid, { container: true, direction: "column", spacing: 2 }, wallets_1.default.map(wallet => (react_1.default.createElement(core_1.Grid, { item: true },
-            react_1.default.createElement(core_1.Button, { variant: "text", onClick: props.connect },
+            react_1.default.createElement(core_1.Button, { variant: "text", onClick: () => __awaiter(void 0, void 0, void 0, function* () { return yield props.connect(wallet); }) },
                 react_1.default.createElement(core_1.Grid, { container: true, direction: "column", spacing: 2 },
                     react_1.default.createElement(core_1.Grid, { item: true },
                         react_1.default.createElement("img", { className: classes.walletLogo, src: wallet.icon, alt: `${wallet.name}_icon` })),
