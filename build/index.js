@@ -13,18 +13,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useSelectedWallet = exports.useCabbageWallet = exports.wallets = void 0;
+exports.useSelectedWallet = exports.useCabbageWallet = exports.WalletSelection = exports.connectWalletConnect = exports.connectInjected = exports.wallets = void 0;
 var wallets_1 = require("./wallets/wallets");
 Object.defineProperty(exports, "wallets", { enumerable: true, get: function () { return __importDefault(wallets_1).default; } });
 __exportStar(require("./wallets/wallets"), exports);
-__exportStar(require("./wallets/connectors/injected"), exports);
-__exportStar(require("./wallets/connectors/walletConnect"), exports);
+var injected_1 = require("./wallets/connectors/injected");
+Object.defineProperty(exports, "connectInjected", { enumerable: true, get: function () { return __importDefault(injected_1).default; } });
+var walletConnect_1 = require("./wallets/connectors/walletConnect");
+Object.defineProperty(exports, "connectWalletConnect", { enumerable: true, get: function () { return __importDefault(walletConnect_1).default; } });
 __exportStar(require("./atoms/walletAtoms"), exports);
-__exportStar(require("./components/WalletSelection"), exports);
+var WalletSelection_1 = require("./components/WalletSelection");
+Object.defineProperty(exports, "WalletSelection", { enumerable: true, get: function () { return __importDefault(WalletSelection_1).default; } });
 var useCabbageWallet_1 = require("./hooks/useCabbageWallet");
 Object.defineProperty(exports, "useCabbageWallet", { enumerable: true, get: function () { return __importDefault(useCabbageWallet_1).default; } });
 __exportStar(require("./hooks/useCabbageWallet"), exports);
 var useSelectedWallet_1 = require("./hooks/useSelectedWallet");
 Object.defineProperty(exports, "useSelectedWallet", { enumerable: true, get: function () { return __importDefault(useSelectedWallet_1).default; } });
 __exportStar(require("./hooks/useSelectedWallet"), exports);
+__exportStar(require("./assets/icons"), exports);
 //# sourceMappingURL=index.js.map

@@ -18,6 +18,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const jotai_1 = require("jotai");
 const walletAtoms_1 = require("../atoms/walletAtoms");
@@ -28,7 +37,7 @@ const useCabbageWallet = (config) => {
     const [connected, setConnected] = jotai_1.useAtom(walletAtoms_1.connectedAtom);
     const [walletProvider, setWalletProvider] = jotai_1.useAtom(walletAtoms_1.walletProviderAtom);
     const [responseCode, setResponseCode] = jotai_1.useAtom(walletAtoms_1.responseCodeAtom);
-    const connect = async (wallet) => {
+    const connect = (wallet) => __awaiter(void 0, void 0, void 0, function* () {
         // wallet is already connected
         if (connected || walletProvider) {
             return;
@@ -39,7 +48,7 @@ const useCabbageWallet = (config) => {
             if (!selectedWallet) {
                 return;
             }
-            const response = await selectedWallet.connector(config.walletConnectOpts);
+            const response = yield selectedWallet.connector(config.walletConnectOpts);
             setResponseCode(response.responseCode);
             if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
                 setWalletProvider(response.provider);
@@ -47,7 +56,7 @@ const useCabbageWallet = (config) => {
             }
             return;
         }
-        const response = await wallet.connector(config.walletConnectOpts);
+        const response = yield wallet.connector(config.walletConnectOpts);
         setResponseCode(response.responseCode);
         if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
             setWalletProvider(response.provider);
@@ -55,7 +64,7 @@ const useCabbageWallet = (config) => {
             setSelectedWallet(wallet.name);
             localStorage.setItem(useSelectedWallet_1.SELECTED_WALLET_KEY, wallet.name);
         }
-    };
+    });
     const disconnect = () => {
         localStorage.removeItem(useSelectedWallet_1.SELECTED_WALLET_KEY);
         setConnected(false);
