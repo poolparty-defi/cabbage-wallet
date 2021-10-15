@@ -15,14 +15,14 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const WalletSelection = (props: { connect: (wallet: Wallet) => Promise<void> }) => {
+const WalletSelection = (props: { connect: (wallet: Wallet) => Promise<void> }): JSX.Element => {
     const classes = useStyles()
     return (
         <Paper className={classes.root} square>
             <Grid container direction="column" spacing={2}>
                 {
                     wallets.map(wallet => (
-                        <Grid item>
+                        <Grid item key={wallet.name}>
                             <Button variant="text" onClick={async () => await props.connect(wallet)}>
                                 <Grid container direction="column" spacing={2}>
                                     <Grid item>

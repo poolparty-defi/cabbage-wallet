@@ -30,7 +30,7 @@ const useStyles = core_1.makeStyles(theme => ({
 const WalletSelection = (props) => {
     const classes = useStyles();
     return (react_1.default.createElement(core_1.Paper, { className: classes.root, square: true },
-        react_1.default.createElement(core_1.Grid, { container: true, direction: "column", spacing: 2 }, wallets_1.default.map(wallet => (react_1.default.createElement(core_1.Grid, { item: true },
+        react_1.default.createElement(core_1.Grid, { container: true, direction: "column", spacing: 2 }, wallets_1.default.map(wallet => (react_1.default.createElement(core_1.Grid, { item: true, key: wallet.name },
             react_1.default.createElement(core_1.Button, { variant: "text", onClick: () => __awaiter(void 0, void 0, void 0, function* () { return yield props.connect(wallet); }) },
                 react_1.default.createElement(core_1.Grid, { container: true, direction: "column", spacing: 2 },
                     react_1.default.createElement(core_1.Grid, { item: true },
