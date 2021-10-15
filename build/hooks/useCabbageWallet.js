@@ -66,12 +66,10 @@ const useCabbageWallet = (config) => {
                 if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
                     setWalletProvider(response.provider);
                     setConnected(true);
-                    localStorage.setItem(exports.SELECTED_WALLET_KEY, wallet.name);
                     setResponseCode(response.responseCode);
                 }
             }
             catch (e) {
-                console.log("failed to reconnect:", e);
                 setResponseCode(e.responseCode);
                 disconnect();
             }

@@ -59,11 +59,9 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
                 if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
                     setWalletProvider(response.provider)
                     setConnected(true)
-                    localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
                     setResponseCode(response.responseCode)
                 }
             } catch (e: any) {
-                console.log("failed to reconnect:", e)
                 setResponseCode(e.responseCode)
                 disconnect()
             }
