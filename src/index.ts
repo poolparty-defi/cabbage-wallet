@@ -13,3 +13,5 @@ export * from './hooks/useCabbageWallet'
 
 export { default as useSelectedWallet } from './hooks/useSelectedWallet'
 export * from './hooks/useSelectedWallet'
+
+export * from './assets/icons'
