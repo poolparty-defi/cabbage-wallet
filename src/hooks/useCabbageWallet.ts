@@ -1,6 +1,6 @@
 import { IWalletConnectProviderOptions } from "@walletconnect/types"
 import { useAtom } from "jotai"
-import { connectedAtom, responseCodeAtom, walletProviderAtom, selectedWalletAtom } from "../atoms/walletAtoms"
+import { connectedAtom, responseCodeAtom, walletProviderAtom } from "../atoms/walletAtoms"
 import wallets, { ConnectorResponseCode, Wallet } from "../wallets/wallets"
 
 export interface CabbageWalletConfig {
@@ -28,10 +28,16 @@ const getWalletFromStorage = (): Wallet | undefined => {
 }
 
 const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
-    const [selectedWallet, setSelectedWallet] = useAtom(selectedWalletAtom)
     const [connected, setConnected] = useAtom(connectedAtom)
     const [walletProvider, setWalletProvider] = useAtom(walletProviderAtom)
     const [responseCode, setResponseCode] = useAtom(responseCodeAtom)
+
+    const disconnect = () => {
+        localStorage.removeItem(SELECTED_WALLET_KEY)
+        setConnected(false)
+        setWalletProvider(undefined)
+    }
+
 
     const connect = async (wallet?: Wallet) => {
         // wallet is already connected
@@ -41,40 +47,41 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
 
         // attempt to connect from stored wallet
         if (!wallet) {
-            const selected = getWalletFromStorage() || selectedWallet
+            const selected = getWalletFromStorage()
 
             // no wallet connection saved
             if (!selected) {
+                console.log("no wallet storage found")
                 return
             }
 
-
-            const response = await selected.connector(config.walletConnectOpts)
-            setResponseCode(response.responseCode)
-            if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
-                setWalletProvider(response.provider)
-                setSelectedWallet(selected)
-                setConnected(true)
-                localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
+            try {
+                const response = await selected.connector(config.walletConnectOpts)
+                if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
+                    setWalletProvider(response.provider)
+                    setConnected(true)
+                    localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
+                    setResponseCode(response.responseCode)
+                }
+            } catch (e: any) {
+                setResponseCode(e.responseCode)
+                disconnect()
             }
             return
         }
 
-        const response = await wallet.connector(config.walletConnectOpts)
-        setResponseCode(response.responseCode)
-        if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
-            setWalletProvider(response.provider)
-            setConnected(true)
-            setSelectedWallet(wallet)
-            localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
+        try {
+            const response = await wallet.connector(config.walletConnectOpts)
+            setResponseCode(response.responseCode)
+            if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
+                setWalletProvider(response.provider)
+                setConnected(true)
+                localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
+            }
+        } catch (e: any) {
+            setResponseCode(e.responseCode)
+            disconnect()
         }
-    }
-
-    const disconnect = () => {
-        localStorage.removeItem(SELECTED_WALLET_KEY)
-        setConnected(false)
-        setSelectedWallet(undefined)
-        setWalletProvider(undefined)
     }
 
     return {
