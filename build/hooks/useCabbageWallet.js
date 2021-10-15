@@ -28,12 +28,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SELECTED_WALLET_KEY = void 0;
 const jotai_1 = require("jotai");
 const walletAtoms_1 = require("../atoms/walletAtoms");
-const wallets_1 = require("../wallets/wallets");
-const useSelectedWallet_1 = __importStar(require("./useSelectedWallet"));
+const wallets_1 = __importStar(require("../wallets/wallets"));
+exports.SELECTED_WALLET_KEY = "SELECTED_WALLET";
+const getWalletFromStorage = () => {
+    const stored = localStorage.getItem(exports.SELECTED_WALLET_KEY);
+    if (stored) {
+        return undefined;
+    }
+    return wallets_1.default.find(wallet => wallet.name === stored);
+};
 const useCabbageWallet = (config) => {
-    const [selectedWallet, setSelectedWallet] = useSelectedWallet_1.default();
+    const [selectedWallet, setSelectedWallet] = jotai_1.useAtom(walletAtoms_1.selectedWalletAtom);
     const [connected, setConnected] = jotai_1.useAtom(walletAtoms_1.connectedAtom);
     const [walletProvider, setWalletProvider] = jotai_1.useAtom(walletAtoms_1.walletProviderAtom);
     const [responseCode, setResponseCode] = jotai_1.useAtom(walletAtoms_1.responseCodeAtom);
@@ -44,15 +52,18 @@ const useCabbageWallet = (config) => {
         }
         // attempt to connect from stored wallet
         if (!wallet) {
+            const selected = getWalletFromStorage() || selectedWallet;
             // no wallet connection saved
-            if (!selectedWallet) {
+            if (!selected) {
                 return;
             }
-            const response = yield selectedWallet.connector(config.walletConnectOpts);
+            const response = yield selected.connector(config.walletConnectOpts);
             setResponseCode(response.responseCode);
             if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
                 setWalletProvider(response.provider);
+                setSelectedWallet(selected);
                 setConnected(true);
+                localStorage.setItem(exports.SELECTED_WALLET_KEY, wallet.name);
             }
             return;
         }
@@ -61,14 +72,14 @@ const useCabbageWallet = (config) => {
         if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
             setWalletProvider(response.provider);
             setConnected(true);
-            setSelectedWallet(wallet.name);
-            localStorage.setItem(useSelectedWallet_1.SELECTED_WALLET_KEY, wallet.name);
+            setSelectedWallet(wallet);
+            localStorage.setItem(exports.SELECTED_WALLET_KEY, wallet.name);
         }
     });
     const disconnect = () => {
-        localStorage.removeItem(useSelectedWallet_1.SELECTED_WALLET_KEY);
+        localStorage.removeItem(exports.SELECTED_WALLET_KEY);
         setConnected(false);
-        setSelectedWallet("");
+        setSelectedWallet(undefined);
         setWalletProvider(undefined);
     };
     return {

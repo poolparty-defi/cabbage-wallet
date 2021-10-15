@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { ConnectorResponseCode } from "../wallets/wallets";
+import { ConnectorResponseCode, Wallet } from "../wallets/wallets";
 export declare const connectedAtom: import("jotai").Atom<boolean> & {
     write: (get: {
         <Value>(atom: import("jotai").Atom<Value | Promise<Value>>): Value;
@@ -16,7 +16,7 @@ export declare const connectedAtom: import("jotai").Atom<boolean> & {
 } & {
     init: boolean;
 };
-export declare const selectedWalletAtom: import("jotai").Atom<string> & {
+export declare const selectedWalletAtom: import("jotai").Atom<Wallet> & {
     write: (get: {
         <Value>(atom: import("jotai").Atom<Value | Promise<Value>>): Value;
         <Value_1>(atom: import("jotai").Atom<Promise<Value_1>>): Value_1;
@@ -27,10 +27,10 @@ export declare const selectedWalletAtom: import("jotai").Atom<string> & {
     }, set: {
         <Value_5, Result extends void | Promise<void>>(atom: import("jotai").WritableAtom<Value_5, undefined, Result>): Result;
         <Value_6, Update, Result_1 extends void | Promise<void>>(atom: import("jotai").WritableAtom<Value_6, Update, Result_1>, update: Update): Result_1;
-    }, update: string | ((prev: string) => string)) => void;
-    onMount?: <S extends (update?: string | ((prev: string) => string)) => void>(setAtom: S) => void | (() => void);
+    }, update: Wallet | ((prev: Wallet) => Wallet)) => void;
+    onMount?: <S extends (update?: Wallet | ((prev: Wallet) => Wallet)) => void>(setAtom: S) => void | (() => void);
 } & {
-    init: string;
+    init: Wallet;
 };
 export declare const walletProviderAtom: import("jotai").Atom<ethers.providers.Web3Provider> & {
     write: (get: {

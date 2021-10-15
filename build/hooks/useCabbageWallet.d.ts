@@ -10,5 +10,6 @@ export interface CabbageWallet {
     connect: ConnectFn;
     disconnect: () => void;
 }
+export declare const SELECTED_WALLET_KEY = "SELECTED_WALLET";
 declare const useCabbageWallet: (config: CabbageWalletConfig) => CabbageWallet;
 export default useCabbageWallet;

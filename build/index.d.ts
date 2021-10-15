@@ -6,6 +6,4 @@ export * from './atoms/walletAtoms';
 export { default as WalletSelection } from './components/WalletSelection';
 export { default as useCabbageWallet } from './hooks/useCabbageWallet';
 export * from './hooks/useCabbageWallet';
-export { default as useSelectedWallet } from './hooks/useSelectedWallet';
-export * from './hooks/useSelectedWallet';
 export * from './assets/icons';
