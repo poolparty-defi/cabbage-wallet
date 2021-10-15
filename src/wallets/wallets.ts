@@ -1,9 +1,8 @@
 import { IWalletConnectProviderOptions } from "@walletconnect/types";
 import { ethers } from "ethers";
+import { metamaskIcon, walletConnectIcon } from "../assets/icons";
 import connectInjected from "./connectors/injected";
 import connectWalletConnect from "./connectors/walletConnect";
-const metamaskLogo = require("../assets/metamask_logo.svg") as string
-const walletConnectLogo = require("../assets/wallet_connect_logo.svg") as string
 
 declare global {
     interface Window {
@@ -54,13 +53,13 @@ const wallets: Array<Wallet> = [
     {
         name: "MetaMask",
         desc: "Connect to your MetaMask Wallet",
-        icon: metamaskLogo,
+        icon: metamaskIcon,
         connector: connectInjected
     },
     {
         name: "WalletConnect",
         desc: "Scan with WalletConnect",
-        icon: walletConnectLogo,
+        icon: walletConnectIcon,
         connector: connectWalletConnect
     }
 ]
