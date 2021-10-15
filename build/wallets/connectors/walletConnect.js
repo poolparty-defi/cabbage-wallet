@@ -19,13 +19,6 @@ const connectWalletConnect = (walletConnectOpts) => __awaiter(void 0, void 0, vo
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         let response;
         try {
-            if (!walletConnectOpts) {
-                response = {
-                    responseCode: wallets_1.ConnectorResponseCode.UnknownEror
-                };
-                reject(response);
-                return;
-            }
             const walletConnectProvider = new web3_provider_1.default(walletConnectOpts);
             try {
                 yield walletConnectProvider.enable();
@@ -45,6 +38,7 @@ const connectWalletConnect = (walletConnectOpts) => __awaiter(void 0, void 0, vo
             }
         }
         catch (e) {
+            console.log("walletConnect failed:", e);
             response = {
                 responseCode: wallets_1.ConnectorResponseCode.UnknownEror
             };

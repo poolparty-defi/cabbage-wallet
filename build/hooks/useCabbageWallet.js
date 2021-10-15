@@ -71,6 +71,7 @@ const useCabbageWallet = (config) => {
                 }
             }
             catch (e) {
+                console.log("failed to reconnect:", e);
                 setResponseCode(e.responseCode);
                 disconnect();
             }
