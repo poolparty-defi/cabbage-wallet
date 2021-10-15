@@ -35,7 +35,7 @@ const wallets_1 = __importStar(require("../wallets/wallets"));
 exports.SELECTED_WALLET_KEY = "SELECTED_WALLET";
 const getWalletFromStorage = () => {
     const stored = localStorage.getItem(exports.SELECTED_WALLET_KEY);
-    if (stored) {
+    if (!stored) {
         return undefined;
     }
     return wallets_1.default.find(wallet => wallet.name === stored);
@@ -59,7 +59,6 @@ const useCabbageWallet = (config) => {
             const selected = getWalletFromStorage();
             // no wallet connection saved
             if (!selected) {
-                console.log("no wallet storage found");
                 return;
             }
             try {

@@ -20,7 +20,7 @@ export const SELECTED_WALLET_KEY = "SELECTED_WALLET"
 
 const getWalletFromStorage = (): Wallet | undefined => {
     const stored = localStorage.getItem(SELECTED_WALLET_KEY)
-    if (stored) {
+    if (!stored) {
         return undefined
     }
 
@@ -51,7 +51,6 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
 
             // no wallet connection saved
             if (!selected) {
-                console.log("no wallet storage found")
                 return
             }
 
