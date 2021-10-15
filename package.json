@@ -1,5 +1,5 @@
 {
-  "name": "cabbage-wallet",
+  "name": "@poolparty/cabbage-wallet",
   "version": "1.0.1",
   "description": "An API for connecting & managing ETH wallets.",
   "main": "index.js",
