@@ -11,4 +11,7 @@ export { default as WalletSelection } from './components/WalletSelection'
 export { default as useCabbageWallet } from './hooks/useCabbageWallet'
 export * from './hooks/useCabbageWallet'
 
+export { default as useBalance } from './hooks/useBalance'
+export * from './hooks/useBalance'
+
 export * from './assets/icons'

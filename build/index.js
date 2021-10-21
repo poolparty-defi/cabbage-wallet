@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useCabbageWallet = exports.WalletSelection = exports.connectWalletConnect = exports.connectInjected = exports.wallets = void 0;
+exports.useBalance = exports.useCabbageWallet = exports.WalletSelection = exports.connectWalletConnect = exports.connectInjected = exports.wallets = void 0;
 var wallets_1 = require("./wallets/wallets");
 Object.defineProperty(exports, "wallets", { enumerable: true, get: function () { return __importDefault(wallets_1).default; } });
 __exportStar(require("./wallets/wallets"), exports);
@@ -27,5 +27,8 @@ Object.defineProperty(exports, "WalletSelection", { enumerable: true, get: funct
 var useCabbageWallet_1 = require("./hooks/useCabbageWallet");
 Object.defineProperty(exports, "useCabbageWallet", { enumerable: true, get: function () { return __importDefault(useCabbageWallet_1).default; } });
 __exportStar(require("./hooks/useCabbageWallet"), exports);
+var useBalance_1 = require("./hooks/useBalance");
+Object.defineProperty(exports, "useBalance", { enumerable: true, get: function () { return __importDefault(useBalance_1).default; } });
+__exportStar(require("./hooks/useBalance"), exports);
 __exportStar(require("./assets/icons"), exports);
 //# sourceMappingURL=index.js.map
