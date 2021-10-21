@@ -28,7 +28,7 @@ const useBalance = () => {
                     return;
                 }
                 const address = yield signer.getAddress();
-                const balance = yield signer.getBalance(address);
+                const balance = yield provider.getBalance(address);
                 let formattedBalance = ethers_1.ethers.utils.formatEther(balance);
                 if (!formattedBalance) {
                     formattedBalance = "0";

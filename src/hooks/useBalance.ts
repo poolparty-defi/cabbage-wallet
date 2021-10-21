@@ -25,7 +25,7 @@ const useBalance = (): BalanceHook => {
             }
 
             const address = await signer.getAddress()
-            const balance = await signer.getBalance(address)
+            const balance = await provider.getBalance(address)
             let formattedBalance = ethers.utils.formatEther(balance)
             if (!formattedBalance) {
                 formattedBalance = "0"
