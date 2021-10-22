@@ -43,7 +43,6 @@ const getWalletFromStorage = () => {
 const useCabbageWallet = (config) => {
     const [connected, setConnected] = jotai_1.useAtom(walletAtoms_1.connectedAtom);
     const [walletProvider, setWalletProvider] = jotai_1.useAtom(walletAtoms_1.walletProviderAtom);
-    const [responseCode, setResponseCode] = jotai_1.useAtom(walletAtoms_1.responseCodeAtom);
     const disconnect = () => {
         if (config.listeners) {
             walletProvider.removeAllListeners();
@@ -53,58 +52,73 @@ const useCabbageWallet = (config) => {
         setWalletProvider(undefined);
     };
     const connect = (wallet) => __awaiter(void 0, void 0, void 0, function* () {
-        // wallet is already connected
-        if (connected || walletProvider) {
-            return;
-        }
-        // attempt to connect from stored wallet
-        if (!wallet) {
-            const selected = getWalletFromStorage();
-            // no wallet connection saved
-            if (!selected) {
-                return;
-            }
+        return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const response = yield selected.connector(config.walletConnectOpts);
-                if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
-                    setWalletProvider(response.provider);
-                    setConnected(true);
-                    setResponseCode(response.responseCode);
-                    if (config.listeners) {
-                        config.listeners.forEach(event => {
-                            response.provider.on(event.eventName, event.listener);
-                        });
+                // wallet is already connected
+                if (connected || walletProvider) {
+                    resolve(wallets_1.ConnectorResponseCode.Success);
+                    return;
+                }
+                // attempt to connect from stored wallet
+                if (!wallet) {
+                    const selected = getWalletFromStorage();
+                    // no wallet connection saved
+                    if (!selected) {
+                        reject(wallets_1.ConnectorResponseCode.UnknownEror);
+                        return;
                     }
+                    try {
+                        const response = yield selected.connector(config.walletConnectOpts);
+                        if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
+                            setWalletProvider(response.provider);
+                            setConnected(true);
+                            if (config.listeners) {
+                                config.listeners.forEach(event => {
+                                    response.provider.on(event.eventName, event.listener);
+                                });
+                            }
+                            resolve(response.responseCode);
+                        }
+                        else {
+                            reject(response.responseCode);
+                        }
+                    }
+                    catch (e) {
+                        disconnect();
+                        reject(e.responseCode);
+                    }
+                    return;
+                }
+                try {
+                    const response = yield wallet.connector(config.walletConnectOpts);
+                    if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
+                        setWalletProvider(response.provider);
+                        setConnected(true);
+                        localStorage.setItem(exports.SELECTED_WALLET_KEY, wallet.name);
+                        if (config.listeners) {
+                            config.listeners.forEach(event => {
+                                response.provider.on(event.eventName, event.listener);
+                            });
+                        }
+                        resolve(response.responseCode);
+                    }
+                    else {
+                        reject(response.responseCode);
+                    }
+                }
+                catch (e) {
+                    disconnect();
+                    reject(e.responseCode);
                 }
             }
             catch (e) {
-                setResponseCode(e.responseCode);
                 disconnect();
+                reject(wallets_1.ConnectorResponseCode.UnknownEror);
             }
-            return;
-        }
-        try {
-            const response = yield wallet.connector(config.walletConnectOpts);
-            setResponseCode(response.responseCode);
-            if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
-                setWalletProvider(response.provider);
-                setConnected(true);
-                localStorage.setItem(exports.SELECTED_WALLET_KEY, wallet.name);
-                if (config.listeners) {
-                    config.listeners.forEach(event => {
-                        response.provider.on(event.eventName, event.listener);
-                    });
-                }
-            }
-        }
-        catch (e) {
-            setResponseCode(e.responseCode);
-            disconnect();
-        }
+        }));
     });
     return {
         connected,
-        responseCode,
         connect,
         disconnect
     };

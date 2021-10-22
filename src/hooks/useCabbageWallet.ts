@@ -14,11 +14,10 @@ export interface CabbageWalletConfig {
     listeners?: [EventListener]
 }
 
-export type ConnectFn = (wallet?: Wallet) => Promise<void>
+export type ConnectFn = (wallet?: Wallet) => Promise<ConnectorResponseCode>
 
 export interface CabbageWallet {
     connected: boolean,
-    responseCode?: ConnectorResponseCode
     connect: ConnectFn
     disconnect: () => void
 }
@@ -37,7 +36,6 @@ const getWalletFromStorage = (): Wallet | undefined => {
 const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
     const [connected, setConnected] = useAtom(connectedAtom)
     const [walletProvider, setWalletProvider] = useAtom(walletProviderAtom)
-    const [responseCode, setResponseCode] = useAtom(responseCodeAtom)
 
     const disconnect = () => {
         if (config.listeners) {
@@ -48,62 +46,74 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
         setWalletProvider(undefined)
     }
 
-    const connect = async (wallet?: Wallet) => {
-        // wallet is already connected
-        if (connected || walletProvider) {
-            return
-        }
+    const connect = async (wallet?: Wallet): Promise<ConnectorResponseCode> => new Promise<ConnectorResponseCode>(async (resolve, reject) => {
+        try {
+            // wallet is already connected
+            if (connected || walletProvider) {
+                resolve(ConnectorResponseCode.Success)
+                return
+            }
 
-        // attempt to connect from stored wallet
-        if (!wallet) {
-            const selected = getWalletFromStorage()
+            // attempt to connect from stored wallet
+            if (!wallet) {
+                const selected = getWalletFromStorage()
 
-            // no wallet connection saved
-            if (!selected) {
+                // no wallet connection saved
+                if (!selected) {
+                    reject(ConnectorResponseCode.UnknownEror)
+                    return
+                }
+
+                try {
+                    const response = await selected.connector(config.walletConnectOpts)
+                    if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
+                        setWalletProvider(response.provider)
+                        setConnected(true)
+                        if (config.listeners) {
+                            config.listeners.forEach(event => {
+                                response.provider.on(event.eventName, event.listener)
+                            })
+                        }
+                        resolve(response.responseCode)
+                    }
+                    else {
+                        reject(response.responseCode)
+                    }
+                } catch (e: any) {
+                    disconnect()
+                    reject(e.responseCode)
+                }
                 return
             }
 
             try {
-                const response = await selected.connector(config.walletConnectOpts)
+                const response = await wallet.connector(config.walletConnectOpts)
                 if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
                     setWalletProvider(response.provider)
                     setConnected(true)
-                    setResponseCode(response.responseCode)
+                    localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
                     if (config.listeners) {
                         config.listeners.forEach(event => {
                             response.provider.on(event.eventName, event.listener)
                         })
                     }
+                    resolve(response.responseCode)
+                }
+                else {
+                    reject(response.responseCode)
                 }
             } catch (e: any) {
-                setResponseCode(e.responseCode)
                 disconnect()
+                reject(e.responseCode)
             }
-            return
-        }
-
-        try {
-            const response = await wallet.connector(config.walletConnectOpts)
-            setResponseCode(response.responseCode)
-            if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
-                setWalletProvider(response.provider)
-                setConnected(true)
-                localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
-                if (config.listeners) {
-                    config.listeners.forEach(event => {
-                        response.provider.on(event.eventName, event.listener)
-                    })
-                }
-            }
-        } catch (e: any) {
-            setResponseCode(e.responseCode)
+        } catch (e) {
             disconnect()
+            reject(ConnectorResponseCode.UnknownEror)
         }
-    }
+    })
 
     return {
         connected,
-        responseCode,
         connect,
         disconnect
     }

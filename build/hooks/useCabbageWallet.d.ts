@@ -9,10 +9,9 @@ export interface CabbageWalletConfig {
     walletConnectOpts?: IWalletConnectProviderOptions;
     listeners?: [EventListener];
 }
-export declare type ConnectFn = (wallet?: Wallet) => Promise<void>;
+export declare type ConnectFn = (wallet?: Wallet) => Promise<ConnectorResponseCode>;
 export interface CabbageWallet {
     connected: boolean;
-    responseCode?: ConnectorResponseCode;
     connect: ConnectFn;
     disconnect: () => void;
 }
