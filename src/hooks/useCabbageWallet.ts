@@ -1,10 +1,17 @@
+import { Web3Provider, EventType, Listener } from "@ethersproject/providers"
 import { IWalletConnectProviderOptions } from "@walletconnect/types"
 import { useAtom } from "jotai"
 import { connectedAtom, responseCodeAtom, walletProviderAtom } from "../atoms/walletAtoms"
 import wallets, { ConnectorResponseCode, Wallet } from "../wallets/wallets"
 
+export interface EventListener {
+    eventName: EventType
+    listener: Listener
+}
+
 export interface CabbageWalletConfig {
     walletConnectOpts?: IWalletConnectProviderOptions
+    listeners?: [EventListener]
 }
 
 export type ConnectFn = (wallet?: Wallet) => Promise<void>
@@ -33,11 +40,13 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
     const [responseCode, setResponseCode] = useAtom(responseCodeAtom)
 
     const disconnect = () => {
+        if (config.listeners) {
+            walletProvider.removeAllListeners()
+        }
         localStorage.removeItem(SELECTED_WALLET_KEY)
         setConnected(false)
         setWalletProvider(undefined)
     }
-
 
     const connect = async (wallet?: Wallet) => {
         // wallet is already connected
@@ -60,6 +69,11 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
                     setWalletProvider(response.provider)
                     setConnected(true)
                     setResponseCode(response.responseCode)
+                    if (config.listeners) {
+                        config.listeners.forEach(event => {
+                            response.provider.on(event.eventName, event.listener)
+                        })
+                    }
                 }
             } catch (e: any) {
                 setResponseCode(e.responseCode)
@@ -75,6 +89,11 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
                 setWalletProvider(response.provider)
                 setConnected(true)
                 localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
+                if (config.listeners) {
+                    config.listeners.forEach(event => {
+                        response.provider.on(event.eventName, event.listener)
+                    })
+                }
             }
         } catch (e: any) {
             setResponseCode(e.responseCode)

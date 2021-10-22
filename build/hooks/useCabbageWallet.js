@@ -45,6 +45,9 @@ const useCabbageWallet = (config) => {
     const [walletProvider, setWalletProvider] = jotai_1.useAtom(walletAtoms_1.walletProviderAtom);
     const [responseCode, setResponseCode] = jotai_1.useAtom(walletAtoms_1.responseCodeAtom);
     const disconnect = () => {
+        if (config.listeners) {
+            walletProvider.removeAllListeners();
+        }
         localStorage.removeItem(exports.SELECTED_WALLET_KEY);
         setConnected(false);
         setWalletProvider(undefined);
@@ -67,6 +70,11 @@ const useCabbageWallet = (config) => {
                     setWalletProvider(response.provider);
                     setConnected(true);
                     setResponseCode(response.responseCode);
+                    if (config.listeners) {
+                        config.listeners.forEach(event => {
+                            response.provider.on(event.eventName, event.listener);
+                        });
+                    }
                 }
             }
             catch (e) {
@@ -82,6 +90,11 @@ const useCabbageWallet = (config) => {
                 setWalletProvider(response.provider);
                 setConnected(true);
                 localStorage.setItem(exports.SELECTED_WALLET_KEY, wallet.name);
+                if (config.listeners) {
+                    config.listeners.forEach(event => {
+                        response.provider.on(event.eventName, event.listener);
+                    });
+                }
             }
         }
         catch (e) {
