@@ -10,7 +10,7 @@ const useContract = () => {
         if (!provider || !connected) {
             return null;
         }
-        return new ethers_1.ethers.Contract(address, abi, provider);
+        return new ethers_1.ethers.Contract(address, abi, provider.getSigner());
     };
     return {
         getContract

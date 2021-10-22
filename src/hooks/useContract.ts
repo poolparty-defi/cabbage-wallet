@@ -15,7 +15,7 @@ const useContract = (): UseContractHook => {
             return null
         }
 
-        return new ethers.Contract(address, abi, provider)
+        return new ethers.Contract(address, abi, provider.getSigner())
     }
 
     return {
