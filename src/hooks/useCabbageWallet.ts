@@ -88,6 +88,7 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
 
             try {
                 const response = await wallet.connector(config.walletConnectOpts)
+                console.log("response:", response)
                 if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
                     setWalletProvider(response.provider)
                     setConnected(true)

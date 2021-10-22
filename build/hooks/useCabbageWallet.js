@@ -91,6 +91,7 @@ const useCabbageWallet = (config) => {
                 }
                 try {
                     const response = yield wallet.connector(config.walletConnectOpts);
+                    console.log("response:", response);
                     if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
                         setWalletProvider(response.provider);
                         setConnected(true);
