@@ -8,4 +8,6 @@ export { default as useCabbageWallet } from './hooks/useCabbageWallet';
 export * from './hooks/useCabbageWallet';
 export { default as useBalance } from './hooks/useBalance';
 export * from './hooks/useBalance';
+export { default as useContract } from './hooks/useContract';
+export * from './hooks/useContract';
 export * from './assets/icons';
