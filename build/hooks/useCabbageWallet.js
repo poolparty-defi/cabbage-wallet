@@ -56,7 +56,6 @@ const useCabbageWallet = (config) => {
             try {
                 // wallet is already connected
                 if (connected || walletProvider) {
-                    console.log("reconnected");
                     resolve(wallets_1.ConnectorResponseCode.Success);
                     return;
                 }
@@ -65,13 +64,11 @@ const useCabbageWallet = (config) => {
                     const selected = getWalletFromStorage();
                     // no wallet connection saved
                     if (!selected) {
-                        console.log("selected wallet not found.");
                         reject(wallets_1.ConnectorResponseCode.UnknownEror);
                         return;
                     }
                     try {
                         const response = yield selected.connector(config.walletConnectOpts);
-                        console.log("reconnection response:", response);
                         if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
                             setWalletProvider(response.provider);
                             setConnected(true);
@@ -87,7 +84,6 @@ const useCabbageWallet = (config) => {
                         }
                     }
                     catch (e) {
-                        console.log("rejected reconnect:", e);
                         disconnect();
                         reject(e.responseCode);
                     }
@@ -95,7 +91,6 @@ const useCabbageWallet = (config) => {
                 }
                 try {
                     const response = yield wallet.connector(config.walletConnectOpts);
-                    console.log("connection response:", response);
                     if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
                         setWalletProvider(response.provider);
                         setConnected(true);
@@ -112,13 +107,11 @@ const useCabbageWallet = (config) => {
                     }
                 }
                 catch (e) {
-                    console.log("rejected connect:", e);
                     disconnect();
                     reject(e.responseCode);
                 }
             }
             catch (e) {
-                console.log("Error connecting wallet:", e);
                 disconnect();
                 reject(wallets_1.ConnectorResponseCode.UnknownEror);
             }

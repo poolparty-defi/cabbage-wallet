@@ -12,12 +12,12 @@ const useStyles = makeStyles(() => ({
 const WalletSelection = (props: { connect: (wallet: Wallet) => Promise<void> }): JSX.Element => {
     const classes = useStyles()
     return (
-        <Grid container direction="column" spacing={2}>
+        <Grid container justifyContent="center" alignItems="center" direction="column" spacing={2}>
             {
                 wallets.map(wallet => (
                     <Grid item key={wallet.name}>
                         <Button variant="text" onClick={async () => await props.connect(wallet)}>
-                            <Grid container direction="column" spacing={2}>
+                            <Grid container justifyContent="center" alignItems="center" direction="column" spacing={2}>
                                 <Grid item>
                                     <img className={classes.walletLogo} src={wallet.icon} alt={`${wallet.name}_icon`} />
                                 </Grid>
