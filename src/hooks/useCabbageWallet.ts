@@ -107,6 +107,7 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
                 reject(e.responseCode)
             }
         } catch (e) {
+            console.log("Error connecting wallet:", e)
             disconnect()
             reject(ConnectorResponseCode.UnknownEror)
         }

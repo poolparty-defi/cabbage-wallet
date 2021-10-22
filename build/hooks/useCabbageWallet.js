@@ -112,6 +112,7 @@ const useCabbageWallet = (config) => {
                 }
             }
             catch (e) {
+                console.log("Error connecting wallet:", e);
                 disconnect();
                 reject(wallets_1.ConnectorResponseCode.UnknownEror);
             }
