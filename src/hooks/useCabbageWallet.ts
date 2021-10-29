@@ -67,13 +67,13 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
                 try {
                     const response = await selected.connector(config.walletConnectOpts)
                     if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
+                        setWalletProvider(response.provider)
                         setConnected(true)
                         if (config.listeners) {
                             config.listeners.forEach(event => {
                                 response.provider.on(event.eventName, event.listener)
                             })
                         }
-                        setWalletProvider(response.provider)
                         resolve(response.responseCode)
                     }
                     else {
@@ -89,6 +89,7 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
             try {
                 const response = await wallet.connector(config.walletConnectOpts)
                 if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
+                    setWalletProvider(response.provider)
                     setConnected(true)
                     localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)
                     if (config.listeners) {
@@ -96,7 +97,6 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
                             response.provider.on(event.eventName, event.listener)
                         })
                     }
-                    setWalletProvider(response.provider)
                     resolve(response.responseCode)
                 }
                 else {
