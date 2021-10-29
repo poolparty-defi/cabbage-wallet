@@ -7,7 +7,7 @@ export interface EventListener {
 }
 export interface CabbageWalletConfig {
     walletConnectOpts?: IWalletConnectProviderOptions;
-    listeners?: [EventListener];
+    listeners?: Array<EventListener>;
 }
 export declare type ConnectFn = (wallet?: Wallet) => Promise<ConnectorResponseCode>;
 export interface CabbageWallet {
