@@ -43,6 +43,7 @@ const getWalletFromStorage = () => {
 const useCabbageWallet = (config) => {
     const [connected, setConnected] = jotai_1.useAtom(walletAtoms_1.connectedAtom);
     const [walletProvider, setWalletProvider] = jotai_1.useAtom(walletAtoms_1.walletProviderAtom);
+    const [network, setNetwork] = jotai_1.useAtom(walletAtoms_1.networkAtom);
     const disconnect = () => {
         if (config.listeners) {
             walletProvider.removeAllListeners();
@@ -70,6 +71,8 @@ const useCabbageWallet = (config) => {
                     try {
                         const response = yield selected.connector(config.walletConnectOpts);
                         if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
+                            const network = yield response.provider.getNetwork();
+                            setNetwork(network.chainId);
                             setWalletProvider(response.provider);
                             setConnected(true);
                             if (config.listeners) {
@@ -92,6 +95,8 @@ const useCabbageWallet = (config) => {
                 try {
                     const response = yield wallet.connector(config.walletConnectOpts);
                     if (response.responseCode == wallets_1.ConnectorResponseCode.Success && response.provider) {
+                        const network = yield response.provider.getNetwork();
+                        setNetwork(network.chainId);
                         setWalletProvider(response.provider);
                         setConnected(true);
                         localStorage.setItem(exports.SELECTED_WALLET_KEY, wallet.name);

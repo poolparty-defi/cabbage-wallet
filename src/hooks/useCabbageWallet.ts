@@ -1,7 +1,7 @@
 import {  EventType, Listener } from "@ethersproject/providers"
 import { IWalletConnectProviderOptions } from "@walletconnect/types"
 import { useAtom } from "jotai"
-import { connectedAtom, walletProviderAtom } from "../atoms/walletAtoms"
+import { connectedAtom, walletProviderAtom, networkAtom } from "../atoms/walletAtoms"
 import wallets, { ConnectorResponseCode, Wallet } from "../wallets/wallets"
 
 export interface EventListener {
@@ -36,6 +36,7 @@ const getWalletFromStorage = (): Wallet | undefined => {
 const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
     const [connected, setConnected] = useAtom(connectedAtom)
     const [walletProvider, setWalletProvider] = useAtom(walletProviderAtom)
+    const [network, setNetwork] = useAtom(networkAtom)
 
     const disconnect = () => {
         if (config.listeners) {
@@ -67,6 +68,8 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
                 try {
                     const response = await selected.connector(config.walletConnectOpts)
                     if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
+                        const network = await response.provider.getNetwork()
+                        setNetwork(network.chainId)
                         setWalletProvider(response.provider)
                         setConnected(true)
                         if (config.listeners) {
@@ -89,6 +92,8 @@ const useCabbageWallet = (config: CabbageWalletConfig): CabbageWallet => {
             try {
                 const response = await wallet.connector(config.walletConnectOpts)
                 if (response.responseCode == ConnectorResponseCode.Success && response.provider) {
+                    const network = await response.provider.getNetwork()
+                    setNetwork(network.chainId)
                     setWalletProvider(response.provider)
                     setConnected(true)
                     localStorage.setItem(SELECTED_WALLET_KEY, wallet.name)

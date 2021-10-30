@@ -19,6 +19,7 @@ const connectInjected = async (): Promise<ConnectorResponse> => new Promise<Conn
                 responseCode: ConnectorResponseCode.Success,
                 provider
             }
+            window.ethereum.on("chainChanged", () => window.location.reload())
             resolve(response)
         } catch (e: any) {
             response = {

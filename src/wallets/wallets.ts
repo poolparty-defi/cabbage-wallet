@@ -56,12 +56,12 @@ const wallets: Array<Wallet> = [
         icon: metamaskIcon,
         connector: connectInjected
     },
-    {
-        name: "WalletConnect",
-        desc: "Scan with WalletConnect",
-        icon: walletConnectIcon,
-        connector: connectWalletConnect
-    }
+    // {
+    //     name: "WalletConnect",
+    //     desc: "Scan with WalletConnect",
+    //     icon: walletConnectIcon,
+    //     connector: connectWalletConnect
+    // }
 ]
 
 export default wallets

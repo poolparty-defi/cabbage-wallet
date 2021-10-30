@@ -1,1 +1,1 @@
-{"version":3,"file":"walletAtoms.js","sourceRoot":"","sources":["../../src/atoms/walletAtoms.ts"],"names":[],"mappings":";;;AACA,iCAA6B;AAEhB,QAAA,aAAa,GAAG,YAAI,CAAU,KAAK,CAAC,CAAA;AACpC,QAAA,kBAAkB,GAAG,YAAI,CAAgC,SAA0C,CAAC,CAAA"}
+{"version":3,"file":"walletAtoms.js","sourceRoot":"","sources":["../../src/atoms/walletAtoms.ts"],"names":[],"mappings":";;;AACA,iCAA6B;AAEhB,QAAA,aAAa,GAAG,YAAI,CAAU,KAAK,CAAC,CAAA;AACpC,QAAA,kBAAkB,GAAG,YAAI,CAAgC,SAA0C,CAAC,CAAA;AACpG,QAAA,WAAW,GAAG,YAAI,CAAS,SAAmB,CAAC,CAAA"}

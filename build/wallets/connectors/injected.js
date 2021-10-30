@@ -29,6 +29,7 @@ const connectInjected = () => __awaiter(void 0, void 0, void 0, function* () {
                     responseCode: wallets_1.ConnectorResponseCode.Success,
                     provider
                 };
+                window.ethereum.on("chainChanged", () => window.location.reload());
                 resolve(response);
             }
             catch (e) {

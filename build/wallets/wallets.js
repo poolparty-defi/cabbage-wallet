@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConnectorResponseCode = void 0;
 const icons_1 = require("../assets/icons");
 const injected_1 = __importDefault(require("./connectors/injected"));
-const walletConnect_1 = __importDefault(require("./connectors/walletConnect"));
 var ConnectorResponseCode;
 (function (ConnectorResponseCode) {
     /**
@@ -37,12 +36,12 @@ const wallets = [
         icon: icons_1.metamaskIcon,
         connector: injected_1.default
     },
-    {
-        name: "WalletConnect",
-        desc: "Scan with WalletConnect",
-        icon: icons_1.walletConnectIcon,
-        connector: walletConnect_1.default
-    }
+    // {
+    //     name: "WalletConnect",
+    //     desc: "Scan with WalletConnect",
+    //     icon: walletConnectIcon,
+    //     connector: connectWalletConnect
+    // }
 ];
 exports.default = wallets;
 //# sourceMappingURL=wallets.js.map
